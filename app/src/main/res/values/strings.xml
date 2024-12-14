@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Cookify</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string-array name="category_items">
+        <item>Category</item>
+        <item>Breakfast</item>
+        <item>Brunch</item>
+        <item>Lunch</item>
+        <item>Dessert</item>
+    </string-array>
+    <string-array name="calorie_items">
+        <item>Calories</item>
+        <item>Above</item>
+        <item>Under</item>
+        <item>Equal</item>
+    </string-array>
+</resources>
+
