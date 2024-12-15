@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "578922492887",
+    "project_id": "spotify-c3754",
+    "storage_bucket": "spotify-c3754.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578922492887:android:fe70088514bfb7ad661192",
+        "android_client_info": {
+          "package_name": "com.example.cookify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSzPsla5-YQUM6TI7ECpH62DnKNiMcnV4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
