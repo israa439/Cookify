@@ -59,11 +59,11 @@ public class detailedRecipe extends AppCompatActivity {
                     //update data base
                     heartImage.setImageResource(R.drawable.empty_heart);
                     isFavorite[0] =false;
-                    Toast.makeText(detailedRecipe.this, "Recipe removed from the favorite", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(detailedRecipe.this, "Recipe removed from the favorites", Toast.LENGTH_SHORT).show();
                 }else{
                     heartImage.setImageResource(R.drawable.filled_heart);
                     isFavorite[0] =true;
-                    Toast.makeText(detailedRecipe.this, "Recipe added to the favorite", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(detailedRecipe.this, "Recipe added to the favorites", Toast.LENGTH_SHORT).show();
                 }
             }
         });

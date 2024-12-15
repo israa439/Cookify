@@ -6,6 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".create_recipe">
+
+
+
     <LinearLayout
         android:id="@+id/headerDetailedRecipe"
         android:layout_width="wrap_content"
@@ -48,37 +51,358 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headerDetailedRecipe" />
 
-    <LinearLayout
-        android:layout_width="343dp"
-        android:layout_height="390dp"
-        android:layout_marginTop="140dp"
-        android:orientation="vertical"
-        android:padding="16dp"
+    <ScrollView
+        android:id="@+id/form_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/white_border"
+        android:padding="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider">
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintWidth_percent="0.9">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:contentDescription="Image to upload"
-            android:src="@drawable/ic_launcher_foreground" />
-
-        <Button
-            android:id="@+id/selectImageButton"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Image" />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/uploadButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upload Image" />
-    </LinearLayout>
+
+
+
+            <TextView
+                android:id="@+id/creating_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create your own recipe:"
+                android:textColor="#F1FAEE"
+                android:textColorLink="#F1FAEE"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/Name_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/creating_header">
+
+
+                <TextView
+                    android:id="@+id/name_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Recipe Name:"
+                    android:textColor="#DDE0DC"
+                    android:textSize="17sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/name_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="22dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#8F948E"
+                    android:ems="10"
+                    android:hint="pancakes"
+                    android:inputType="text"
+                    android:paddingLeft="10dp"
+                    android:textColor="#DDE0DC"
+                    android:textColorLink="#878A86"
+                    android:textCursorDrawable="@drawable/caret"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/name_header"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Calorie_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/Name_container">
+
+
+                <TextView
+                    android:id="@+id/calorie_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Recipe Calories:"
+                    android:textColor="#DDE0DC"
+                    android:textSize="17sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/calorie_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#F1FAEE"
+                    android:ems="10"
+                    android:hint="350 calories"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:textColor="#DDE0DC"
+                    android:textColorLink="#F1FAEE"
+                    android:textCursorDrawable="@drawable/caret"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/calorie_header"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Duration_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/Calorie_container">
+
+
+                <TextView
+                    android:id="@+id/duration_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Recipe Duration:"
+                    android:textColor="#DDE0DC"
+                    android:textSize="17sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/duration_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#F1FAEE"
+                    android:ems="10"
+                    android:hint="65 minutes"
+                    android:inputType="text"
+                    android:paddingLeft="10dp"
+                    android:textColorLink="#DDE0DC"
+                    android:textCursorDrawable="@drawable/caret"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    app:layout_constraintStart_toEndOf="@id/calorie_header"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Ingredients_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/Duration_container">
+
+
+                <TextView
+                    android:id="@+id/Ingredients_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:text="Recipe Ingredients:"
+                    android:textColor="#DDE0DC"
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+                <EditText
+                    android:id="@+id/Ingredients_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/white_border"
+                    android:backgroundTint="#F1FAEE"
+                    android:ems="10"
+                    android:gravity="top|start"
+                    android:hint="2 Eggs\nFlour\nBaking powder"
+                    android:inputType="textMultiLine"
+                    android:maxLines="6"
+                    android:minLines="3"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:scrollHorizontally="false"
+                    android:textColorLink="#DDE0DC"
+                    android:textCursorDrawable="@drawable/caret"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/Ingredients_header" />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Prepway_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/Ingredients_container">
+
+
+                <TextView
+                    android:id="@+id/Prepway_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:text="Recipe Preperation Way:"
+                    android:textColor="#DDE0DC"
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <EditText
+                    android:id="@+id/prepway_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/white_border"
+                    android:backgroundTint="#F1FAEE"
+                    android:ems="10"
+                    android:gravity="top|start"
+                    android:hint="Sift flour, baking powder, sugar, and salt together in a large bowl. Make a well in the center and add milk, melted butter, and egg; mix until smooth..."
+                    android:inputType="textMultiLine"
+                    android:maxLines="6"
+                    android:minLines="3"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:scrollHorizontally="false"
+                    android:textColorLink="#DDE0DC"
+                    android:textCursorDrawable="@drawable/caret"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/Prepway_header" />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/Image_container"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Prepway_container">
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:id="@+id/recipeImg"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="Image to upload"
+                    android:background="@drawable/white_border"
+                    android:scaleType="centerCrop"/>
+
+                <Button
+                    android:id="@+id/selectImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#6A6565"
+                    android:text="Select Image"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recipeImg" />
+                        </LinearLayout>
+
+            <Button
+                android:id="@+id/Submit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="#86D589"
+                android:text="Submit"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/Image_container" />
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
