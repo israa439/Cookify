@@ -90,8 +90,8 @@ public class detailedRecipe extends AppCompatActivity {
             String[] ingredients = recipeIngredients.split("\\*");
             ingredientsView.removeAllViews();
 
-            int totalWidthDp = (int) (getResources().getDisplayMetrics().widthPixels * 0.35);  // Total GridLayout width in dp
-            int columnWidthDp = (totalWidthDp-16) / 2; // Width for each column in dp
+            int totalWidthDp = (int) (getResources().getDisplayMetrics().widthPixels * 0.35);
+            int columnWidthDp = (totalWidthDp-16) / 2;
 
             // Convert dp to pixels (for setting max width)
             float scale = getResources().getDisplayMetrics().density;
@@ -101,18 +101,18 @@ public class detailedRecipe extends AppCompatActivity {
                 TextView ingredientView = new TextView(this);
                 ingredientView.setText("\u2022 " + ingredient.trim());
                 ingredientView.setTextSize(14);
-                ingredientView.setSingleLine(false); // Allow wrapping
-                ingredientView.setEllipsize(null);  // No truncation
-                ingredientView.setMaxWidth(columnWidthPx); // Max width for wrapping
+                ingredientView.setSingleLine(false);
+                ingredientView.setEllipsize(null);
+                ingredientView.setMaxWidth(columnWidthPx);
                 ingredientView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
 
                 // Set layout parameters
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.setMargins(8, 8, 15, 8);
-                params.width = columnWidthPx; // Set column width
+                params.width = columnWidthPx;
                 params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1); // Occupies one column
-                params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED);       // Auto place in rows
+                params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1);
+                params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED);
 
                 ingredientView.setLayoutParams(params);
                 ingredientsView.addView(ingredientView);
