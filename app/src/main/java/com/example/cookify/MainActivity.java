@@ -2,6 +2,8 @@ package com.example.cookify;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,8 +14,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.cookify.DataSrc.Data_structure.Meal;
+import com.example.cookify.DataSrc.connection.Database;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -22,15 +29,20 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.cookify.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private SQLiteDatabase db;
+    private Database connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -44,10 +56,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().hide();
         }
-//        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = prefs.edit();
-//        editor.clear(); // Removes all stored values
-//        editor.apply();
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
         MenuItem menuItem = bottomNavigationView.getMenu().findItem(R.id.navigation_dashboard);
@@ -125,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
         ImageView profileIcon = findViewById(R.id.profileicon);
         profileIcon.setImageBitmap(bitmap);
     }
+
+
+
 
 
 

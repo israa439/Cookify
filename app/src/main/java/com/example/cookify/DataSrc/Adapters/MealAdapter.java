@@ -54,6 +54,10 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
     public int getItemCount() {
         return mealList.size();
     }
+    public void updateData(List<Meal> newMealList) {
+        this.mealList = newMealList;
+    }
+
 
     public static class MealViewHolder extends RecyclerView.ViewHolder {
         TextView mealName;
