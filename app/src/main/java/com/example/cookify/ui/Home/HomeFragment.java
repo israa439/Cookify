@@ -9,12 +9,19 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,7 +38,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private RecyclerView recyclerView;
-    private MealAdapter mealAdapter; // ✅ Make adapter a class variable
+    private MealAdapter mealAdapter;
     private Database connection;
     private List<Meal> meals; // ✅ Store the full meal list for reset
 
@@ -41,6 +48,10 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         recyclerView = root.findViewById(R.id.recipe_container);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        Spinner categorySpinner = binding.categoryDropdown;
+        Spinner caloriesSpinner = binding.calorieDropdown;
+        EditText caloriesValue = binding.calsNumeric;
+        ImageView filterButton = root.findViewById(R.id.filter_icon);
 
         // ✅ Initialize database connection
         connection = new Database(requireContext());
@@ -91,6 +102,48 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+
+
+        if (getContext() != null) {
+            // Populate category dropdown
+            ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(requireContext(),
+                    R.array.category_items, android.R.layout.simple_spinner_item);
+            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            categorySpinner.setAdapter(categoryAdapter);
+
+            // Populate calorie dropdown
+            ArrayAdapter<CharSequence> calorieAdapter = ArrayAdapter.createFromResource(requireContext(),
+                    R.array.calorie_items, android.R.layout.simple_spinner_item);
+            calorieAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            caloriesSpinner.setAdapter(calorieAdapter);
+        }
+
+        if (categorySpinner == null || caloriesSpinner == null || caloriesValue == null || filterButton == null) {
+            Log.e("HomeFragment", "One or more UI elements are null.");
+            return root;
+        }
+
+        // Set filter button click listener
+        filterButton.setOnClickListener(v -> {
+            String selectedCategory = categorySpinner.getSelectedItem().toString();
+            String selectedCalorieFilter = caloriesSpinner.getSelectedItem().toString();
+            String calorieValueText = caloriesValue.getText().toString().trim();
+
+            // If a calorie filter is selected, ensure a number is provided
+            if (!selectedCalorieFilter.equals("Calories") && calorieValueText.isEmpty()) {
+                Toast.makeText(getContext(), "Please enter a calorie value", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int calorieValue = calorieValueText.isEmpty() ? -1 : Integer.parseInt(calorieValueText);
+
+            // Fetch filtered meals from database
+            List<Meal> filteredMeals = fetchFilteredMeals(selectedCategory, selectedCalorieFilter, calorieValue);
+
+            // Update RecyclerView with filtered results
+            updateRecyclerView(filteredMeals);
+        });
         return root;
     }
 
@@ -146,5 +199,56 @@ public class HomeFragment extends Fragment {
 
         return filteredMeals;
     }
+
+    private List<Meal> fetchFilteredMeals(String category, String calorieFilter, int calorieValue) {
+        List<Meal> filteredMeals = new ArrayList<>();
+        SQLiteDatabase db = connection.getReadableDatabase();
+
+        // Base SQL query
+        String query = "SELECT * FROM Meals_description WHERE 1=1";
+        List<String> queryArgs = new ArrayList<>();
+
+        // Apply category filter
+        if (!category.equals("Category")) {
+            query += " AND category_id IN (SELECT category_id FROM Meals_category WHERE meal_category = ?)";
+            queryArgs.add(category);
+        }
+
+        // Apply calorie filter
+        if (!calorieFilter.equals("Calories")) {
+            if (calorieFilter.equals("Above")) {
+                query += " AND meal_calories > ?";
+            } else if (calorieFilter.equals("Under")) {
+                query += " AND meal_calories < ?";
+            } else if (calorieFilter.equals("Equal")) {
+                query += " AND meal_calories = ?";
+            }
+            queryArgs.add(String.valueOf(calorieValue));
+        }
+
+        Cursor cursor = db.rawQuery(query, queryArgs.toArray(new String[0]));
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    int mealId = cursor.getInt(cursor.getColumnIndexOrThrow("meal_id"));
+                    int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow("category_id"));
+                    String mealIngredients = cursor.getString(cursor.getColumnIndexOrThrow("meal_ingredients"));
+                    String mealPrepWay = cursor.getString(cursor.getColumnIndexOrThrow("meal_prepway"));
+                    int mealCalories = cursor.getInt(cursor.getColumnIndexOrThrow("meal_calories"));
+                    int mealDuration = cursor.getInt(cursor.getColumnIndexOrThrow("meal_duration"));
+                    String mealImage = cursor.getString(cursor.getColumnIndexOrThrow("meal_image"));
+                    String mealName = cursor.getString(cursor.getColumnIndexOrThrow("mealName"));
+
+                    filteredMeals.add(new Meal(mealId, categoryId, mealIngredients, mealPrepWay, mealCalories, mealDuration, mealImage, mealName));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+
+        return filteredMeals;
+    }
+
+
 
 }
