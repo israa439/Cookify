@@ -1,39 +1,111 @@
 package com.example.cookify.DataSrc.Endpoints;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
 import com.example.cookify.DataSrc.Data_structure.Meal;
 import com.example.cookify.DataSrc.Data_structure.userMeal;
+import com.example.cookify.DataSrc.connection.Database;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class fav_recipes {
-    public static List<userMeal> getFavRecipes(){
-        List<userMeal> favrecipes = new ArrayList<>();
-        favrecipes.add(new userMeal(
-                1, 123,
-                "2 Eggs*2 slices of toast*10g Butter*100ml Milk*Salt*Pepper*1 tbsp Olive Oil*1 slice of Cheese*1 tsp Paprika*1/4 Onion (chopped)*1/4 Tomato (diced)*1 tsp Parsley (chopped)",
-                "Beat eggs with milk, salt, and pepper. Heat olive oil in a skillet. Pour egg mixture and stir until scrambled. Toast the bread, butter it, and serve eggs on top. Garnish with parsley.",
-                300, 15,
-                "https://firebasestorage.googleapis.com/v0/b/spotify-c3754.appspot.com/o/cookifyImages%2Fscrambeled_eggs_with_toast.png?alt=media&token=3d0d1516-7802-463d-a6c6-30ba8bbfff7f",
-                "Scrambled Eggs with Toast"
-        ));
-        favrecipes.add(new userMeal(
-                39, 123,
-                "1 Pizza Dough*1/2 cup Tomato Sauce*100g Mozzarella Cheese (shredded)*1/2 cup Toppings (e.g., Pepperoni, Vegetables)*1 tsp Oregano*Salt to taste",
-                "Preheat oven to 220°C (425°F). Spread tomato sauce on pizza dough. Add cheese and toppings. Sprinkle oregano and salt. Bake for 15-20 minutes until crust is golden.",
-                700, 30,
-                "https://storage.googleapis.com/personalblog-364f2.appspot.com/images/pizza.jpg",
-                "Pizza"
-        ));
 
-        favrecipes.add(new userMeal(
-                40, 123,
-                "200g Lo Mein Noodles*1 cup Mixed Vegetables (e.g., Carrots, Bell Peppers)*200g Protein (e.g., Chicken, Shrimp)*2 tbsp Soy Sauce*1 tbsp Oyster Sauce*1 tsp Sesame Oil*1 Garlic Clove (minced)",
-                "Cook noodles according to package instructions. Sauté garlic and protein in sesame oil. Add vegetables, soy sauce, and oyster sauce. Toss noodles with the mixture and serve.",
-                450, 25,
-                "https://storage.googleapis.com/personalblog-364f2.appspot.com/images/lo%20mein.jpg",
-                "Lo Mein"
-        ));
-        return favrecipes;
+    private SQLiteDatabase db;
+    private Database connection;
+
+    public fav_recipes(Context context) {
+        this.connection = new Database(context);
+        this.db = connection.getWritableDatabase();
     }
-}
+
+    public boolean isMealFavorite(int mealId, int userId) {
+        Cursor cursor = null;
+
+        try {
+            String query = "SELECT * FROM Favorite WHERE meal_id = ? AND user_id = ?";
+            cursor = db.rawQuery(query, new String[]{String.valueOf(mealId), String.valueOf(userId)});
+
+            boolean exists = cursor != null && cursor.getCount() > 0; // Check for null cursor
+
+            return exists;
+
+        } catch (SQLException e) {
+            Log.e("Database Error", "Error checking favorite meal: " + e.getMessage());
+            // Handle the error appropriately, e.g., return false or throw an exception
+            return false; // Or throw a custom exception
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    // Add a meal to favorites
+    public boolean addMealToFavorites(int mealId, int userId) {
+        if (isMealFavorite(mealId, userId)) {
+            return false;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("meal_id", mealId);
+        values.put("user_id", userId);
+
+        long result = db.insert("Favorite", null, values);
+
+        return result != -1; // Returns true if insertion is successful
+    }
+
+    // Remove a meal from favorites
+    public boolean removeMealFromFavorites(int mealId, int userId) {
+        int result = db.delete("Favorite", "meal_id = ? AND user_id = ?", new String[]{String.valueOf(mealId), String.valueOf(userId)});
+
+        return result > 0; // Returns true if deletion is successful
+    }
+
+    public List<userMeal> getAllFavoriteMeals(int userId) {
+        List<userMeal> favRecipes = new ArrayList<>();
+        Cursor cursor = null;
+
+        try {
+            String query = "SELECT m.meal_id, m.category_id, m.meal_ingredients, m.meal_prepway, " +
+                    "m.meal_calories, m.meal_duration, m.meal_image, m.mealName " +
+                    "FROM Favorite f " +
+                    "JOIN Meals_description m ON f.meal_id = m.meal_id " +
+                    "WHERE f.user_id = ?";
+
+            cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+            if (cursor != null && cursor.moveToFirst()) { // Check for null cursor
+                do {
+                    userMeal meal = new userMeal(
+                            cursor.getInt(0),
+                            cursor.getInt(1),
+                            cursor.getString(2),
+                            cursor.getString(3),
+                            cursor.getInt(4),
+                            cursor.getInt(5),
+                            cursor.getString(6),
+                            cursor.getString(7)
+                    );
+                    favRecipes.add(meal);
+                } while (cursor.moveToNext());
+            }
+
+        } catch (SQLException e) {
+            Log.e("Database Error", "Error getting favorite meals: " + e.getMessage());
+            // Handle the error appropriately, e.g., return an empty list or throw an exception
+            return new ArrayList<>(); // Return empty list on error
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return favRecipes;
+    }}

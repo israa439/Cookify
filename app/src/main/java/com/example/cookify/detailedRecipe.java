@@ -16,12 +16,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.cookify.DataSrc.Endpoints.fav_recipes;
 
 public class detailedRecipe extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fav_recipes favRecipes = new fav_recipes(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detailed_recipe);
         if (getSupportActionBar() != null) {
@@ -45,8 +47,13 @@ public class detailedRecipe extends AppCompatActivity {
         Integer recipeDuration = sharedPreferences.getInt("recipeDuration", 0);
         String recipeIngredients = sharedPreferences.getString("recipeIngredients", "");
         String recipePrepWay = sharedPreferences.getString("recipePrepWay", "");
-        final boolean[] isFavorite = {false};
-        if (isFavorite[0]) {
+
+        SharedPreferences userPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        int userId = userPrefs.getInt("userId", -1);
+        int recipeId = sharedPreferences.getInt("recipeId", -1);
+
+        final boolean isFav = favRecipes.isMealFavorite(recipeId, userId);
+        if (isFav) {
             heartImage.setImageResource(R.drawable.filled_heart); // Use your drawable
         } else {
             heartImage.setImageResource(R.drawable.empty_heart);
@@ -55,14 +62,19 @@ public class detailedRecipe extends AppCompatActivity {
         heartImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isFavorite[0]){
+                int userId = userPrefs.getInt("userId", -1);
+                int recipeId = sharedPreferences.getInt("recipeId", -1);
+
+                boolean isFav = favRecipes.isMealFavorite(recipeId, userId);
+
+                if(isFav){
                     //update data base
                     heartImage.setImageResource(R.drawable.empty_heart);
-                    isFavorite[0] =false;
+                    favRecipes.removeMealFromFavorites(recipeId, userId);
                     Toast.makeText(detailedRecipe.this, "Recipe removed from the favorites", Toast.LENGTH_SHORT).show();
                 }else{
                     heartImage.setImageResource(R.drawable.filled_heart);
-                    isFavorite[0] =true;
+                    favRecipes.addMealToFavorites(recipeId, userId);
                     Toast.makeText(detailedRecipe.this, "Recipe added to the favorites", Toast.LENGTH_SHORT).show();
                 }
             }

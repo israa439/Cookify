@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,9 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookify.DataSrc.Adapters.MealAdapter;
 import com.example.cookify.DataSrc.Data_structure.userMeal;
 import com.example.cookify.DataSrc.Endpoints.fav_recipes;
-import com.example.cookify.DataSrc.Endpoints.user_recipes;
+
 import com.example.cookify.R;
-import com.example.cookify.create_recipe;
+
 import com.example.cookify.databinding.FragmentFavoritesBinding;
 import com.example.cookify.detailedRecipe;
 
@@ -38,9 +37,13 @@ public class FavoritesFragment extends Fragment {
 
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        fav_recipes favRecipes = new fav_recipes(root.getContext());
+
         recyclerView = root.findViewById(R.id.ur_recipe_container);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        List<userMeal> usermeals= fav_recipes.getFavRecipes();
+        SharedPreferences userPrefs = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int userId = userPrefs.getInt("userId", -1);
+        List<userMeal> usermeals= favRecipes.getAllFavoriteMeals(userId);
 
         MealAdapter mealAdapter = new MealAdapter(getContext(), usermeals, (position, meal) -> {
             System.out.println("entered the meal adapter");
@@ -57,12 +60,13 @@ public class FavoritesFragment extends Fragment {
             editor.apply();
 
             System.out.println("Navigating to detailedRecipe with meal: " + meal.getMealName());
-            Intent intent=new Intent(getContext(), detailedRecipe.class);
+            Intent intent = new Intent(getContext(), detailedRecipe.class);
             startActivity(intent);
 
         });
+
         recyclerView.setAdapter(mealAdapter);
-       
+
         return root;
     }
 
